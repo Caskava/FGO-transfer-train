@@ -14,7 +14,7 @@ logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
 # Google Docs API setup
 SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
-SERVICE_ACCOUNT_FILE = "fgo-448323-dfa28ec84ab6.json"  # Update this path
+SERVICE_ACCOUNT_FILE = "fgo-448323-c2324c2ca31a.json"  # Update this path
 DOCUMENT_ID = "1-DC0VS3Pz_Y5BW5xltLwh44nF0_6aQUNwme-0CVIrDU"  # Replace with your document ID
 
 # Load Google Docs API credentials
