@@ -100,55 +100,58 @@ async def on_ready():
     last_status = None
 
     while True:
-        # Read the Google Docs document
-        text = read_google_doc()
-        if text:
-            logging.info("Google Docs content read successfully.")
-            # Parse the document
-            lines = text.splitlines()
-            transfer_number = None
-            password = None
-            status = None
+        try:
+            # Read the Google Docs document
+            text = read_google_doc()
+            if text:
+                logging.info("Google Docs content read successfully.")
+                # Parse the document
+                lines = text.splitlines()
+                transfer_number = None
+                password = None
+                status = None
 
-            for line in lines:
-                if "Transfer number:" in line:
-                    transfer_number = line.split("Transfer number:")[1].strip()
-                elif "Password:" in line:
-                    password = line.split("Password:")[1].strip()
-                elif "Status:" in line:
-                    status = line.split("Status:")[1].strip()
-                elif "—" in line:  # Handle em dash or en dash
-                    status = line.split("—")[1].strip()
-                elif "-" in line:  # Handle standard hyphen
-                    status = line.split("-")[1].strip()
+                for line in lines:
+                    if "Transfer number:" in line:
+                        transfer_number = line.split("Transfer number:")[1].strip()
+                    elif "Password:" in line:
+                        password = line.split("Password:")[1].strip()
+                    elif "Status:" in line:
+                        status = line.split("Status:")[1].strip()
+                    elif "—" in line:  # Handle em dash or en dash
+                        status = line.split("—")[1].strip()
+                    elif "-" in line:  # Handle standard hyphen
+                        status = line.split("-")[1].strip()
 
-            # Log the parsed values for debugging
-            logging.info(f"Parsed values - Transfer number: {transfer_number}, Password: {password}, Status: {status}")
+                # Log the parsed values for debugging
+                logging.info(f"Parsed values - Transfer number: {transfer_number}, Password: {password}, Status: {status}")
 
-            # Validate the transfer number and password
-            if transfer_number and password == "Samir2009":
-                logging.info(f"Transfer number: {transfer_number}, Password: {password}, Status: {status}")
-                if status != last_status:
-                    # Create the embed
-                    embed = create_embed(transfer_number, password, status)
-                    logging.info("Embed created successfully.")
+                # Validate the transfer number and password
+                if transfer_number and password == "Samir2009":
+                    logging.info(f"Transfer number: {transfer_number}, Password: {password}, Status: {status}")
+                    if status != last_status:
+                        # Create the embed
+                        embed = create_embed(transfer_number, password, status)
+                        logging.info("Embed created successfully.")
 
-                    # Validate the embed before sending
-                    if embed is not None:  # Ensure the embed is not None
-                        # Send a new embed message
-                        await channel.send(embed=embed)
-                        logging.info("Embed sent to the channel.")
-                    else:
-                        logging.warning("Embed is None. Skipping send.")
+                        # Validate the embed before sending
+                        if embed is not None:  # Ensure the embed is not None
+                            # Send a new embed message
+                            await channel.send(embed=embed)
+                            logging.info("Embed sent to the channel.")
+                        else:
+                            logging.warning("Embed is None. Skipping send.")
 
-                    last_status = status
+                        last_status = status
+                else:
+                    logging.warning("Invalid transfer number or password.")
             else:
-                logging.warning("Invalid transfer number or password.")
-        else:
-            logging.warning("Failed to read Google Docs document.")
+                logging.warning("Failed to read Google Docs document.")
+        except Exception as e:
+            logging.error(f"Exception in on_ready: {e}")
 
         await asyncio.sleep(5)  # Check every 5 seconds
-
+        
 # Read the Discord bot token from environment variable
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 if not DISCORD_BOT_TOKEN:
