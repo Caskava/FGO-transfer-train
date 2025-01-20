@@ -16,21 +16,8 @@ logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 # Google Docs API setup
 SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
 
-# Read Google service account credentials from environment variable
-credentials_json = os.getenv({
-  "type": "service_account",
-  "project_id": "fgo-448323",
-  "private_key_id": "721405b9558689496bad9e8a0e9a06bdc1d5e1f5",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6uLiXFVW8Lbpd\nPvUbwZ/CFGCROypNFR1R76qQJJ5fa4LbBuokr2eWgdKjRJECVy3aT4/VBqjbUnjW\nDILCOZbqhFWOcZm9g5vw41U7ytOvjsfY96sVnhpRsr+vfZ6EKbOqsEGLGkDYKDTE\nnQNQ1lxuCiEKwe7UUkCptvouorunN49U7B2MMrpSNt5Sj25j7J6TVaGyAmWk3ReD\nvNbgKtITtImudYc9SjLGyylT3o5gxhe7YSnPjg/quuJR3jHOnIo/6YHbFHzOPBO8\nG6zYlQJzUa7rz29U8bh6fRGS5dXzDXsKKwFhoayrZgICzIWlnOrHPSm/rdRR5ojM\nv7gtZe0VAgMBAAECggEAO0aK6wON3RhTMmjbHP2hvtYDNfenXSMX1LwV1H6bfEVA\nHFIcoJrCcsgx2zzYH/sXBlf9nC3qCv4qeCEunYP0wexS0M6FdOFD7vvsQfgIrZHR\nJbKyMEGpr0fkjEx/twsaC1S66fLipPxWjBggRlhWrWQvyx93txWJi5cX4xgsJE/1\n4FqLeiLQIlXYdE9PsWGfGH6y6jn7Z1tZNqLo3S8mGDii387+cPP8DDs+4RZ6l01g\n4H3BAjc+VI21LQyqoCl/g7hjDgVEe2NLdhCyFC6AuOWX0MopHLwrLQxWdi/JwxDz\nIG8jbLRxPudLOR+gH3A6n3Wl9L8LJdH8zvRgsxDivQKBgQD6+SW9c6KMI9PC9A01\nigxlydspM0P7fgqGrtT5HQ6Cy7OVBq8HhnxdtkzAvPxiIJUdXacgA4PjzFKwlVls\npmF43bq4bh7fpTkCfbXCCwS0UjnxjhAMd7PZMBLAFQt4LVo1zfxXqY0ABatDUYyL\nVkEGXX0ANCxGeJ8eF4H7FDUK5wKBgQC+diBf0R5L+BlRaN9FO8GTwSaPRaau8Xjk\n5dXlKx9SJ/DfSfQSkl1OM66Eyakk9OxzYoFn3foYe6CQyyBUoekln0PBwTfhirbd\nsd0i0M4TfgbJjjQ1YyBEpGGWhusjZoCJIL1NGm8jsQGbNnNVryWgqsP4vVDN1cU8\nwCDptbykowKBgQCcUdsD6aZxC0+2ujQQCPA35kavntLVLmh4AyV8FHEZXq94PzV9\nxnJoHEgqNIwuwoSeSdrywb3AgV9vxVZxqiBEHDdU8KIiQtMDjjFLr3k6p4yXvBia\n62QF/z9ujK0cKYNqx+ZI476DKQTHZV/Y2dyejlRxcA2zxyW0pIe9T5TKOQKBgCuZ\n6UFmIxRrIIilhG9aBa+oiQZFgKoN94oXH4dN/uaU5CyJxok13oxXgn09mS4vr62e\ngFdh1q4iJxjel3Eoe7I0KpPBguRsF/7ah/A/ct29fRpJJqSOI8XzB7ApBM1e2tAJ\noaxz/7tg+ygoJ/EWnnuQfDqGRGhKptOIfEBkbWIXAoGBAKh+PQRz5AB/fdtiZLr3\nH0Rjs1HBSFa/KzJawGX5O6WJfs3jBtnEbDtoO/UV75N6Y77GaV4pac9INW8L2Bif\n3+tfU/rtdiPjH+qQXNgpbfSonbfWiOttkFqL5jIlWPBpT2B2C+GcyRbcQgsiQrMo\nuZBAPYRoZe/N6cx4e18IOB/v\n-----END PRIVATE KEY-----\n",
-  "client_email": "transfer-codes@fgo-448323.iam.gserviceaccount.com",
-  "client_id": "117554026993381649225",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/transfer-codes%40fgo-448323.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-}
-")
+# Read credentials from environment variable
+credentials_json = os.getenv("GOOGLE_CREDENTIALS")
 if not credentials_json:
     logging.error("GOOGLE_CREDENTIALS environment variable is missing.")
     exit(1)
@@ -163,8 +150,7 @@ async def on_ready():
         await asyncio.sleep(5)  # Check every 5 seconds
 
 # Read the Discord bot token from environment variable
-DISCORD_BOT_TOKEN = os.getenv("MTMzMDY4ODk3Njc5NjkxMzc3Ng.GVP0k9.K5IWuY0JoBacd_IxuY0vc2cY2LYBl5Xborlw3s
-")
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 if not DISCORD_BOT_TOKEN:
     logging.error("DISCORD_BOT_TOKEN environment variable is missing.")
     exit(1)
