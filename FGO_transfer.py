@@ -1,10 +1,11 @@
 import discord
+import os
+import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import logging
 import asyncio
-import os
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -14,13 +15,31 @@ logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
 # Google Docs API setup
 SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
-SERVICE_ACCOUNT_FILE = "fgo-448323-298faf2001f2.json"  # Update this path
-DOCUMENT_ID = "1-DC0VS3Pz_Y5BW5xltLwh44nF0_6aQUNwme-0CVIrDU"  # Replace with your document ID
 
-# Load Google Docs API credentials
+# Read Google service account credentials from environment variable
+credentials_json = os.getenv("{
+  "type": "service_account",
+  "project_id": "fgo-448323",
+  "private_key_id": "298faf2001f21988c0d7e3e92e85e08d44fb94d0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC3HlGwR6JZapnv\nZW2t4wj72ZHNpAHrOZCdUpyl+SV01QIQOfVQH0cHhXYUpL+FJFWK7yF3wUtNLGN7\nnvGrHJF6LOI8xOVSmDrUyZClx63rMgPULD5Xd0HNpAVwysuG5E3jIe6SlFTmBtiM\nbfMsnT+2gSXdh8h/m72Q1t3+f8Y2WueCPp/TSZmYKMDIc3fa+mcBRQwPT9DH+a/N\nMeoyzX4gz+X6Qh1mIKaXpKn3HXALU+/uwXIDCJWwRnTViQ6XsparNaQCXzEfMD14\nglz3rERkVwKI1JvlLemvbmV4gsyd7AnHUw0mAYbEoudn/YlwbQJs01xR2EAmIec4\n3sudaI7ZAgMBAAECggEAAol9AEA905dSgqqZFmuq2DJvfrXjAOtPQZ6/ZN1K04+P\n88GZ0H5ecZA7zpVpweJ6/O3LPOmErZEL386X8pL2wQaWK9lehAJv7jrMsj9N/ZA3\n1Vy3kGaqlrrLCIEGyNuo6JizwXwkoPs/TNLJJ7kWBOVNLQCQmpQB0Fvpv3jtuhsK\nUS7BubxIlXva6DBSLS/840SHiwhl7uk3SnnzhF1XfwrmPEfdnYnfQ1YqFkUbrY/U\n/iYsl4zLqyxqC1JceCCFVBfXAgkinnxMqmlJXCW9L8tsd+X2ib7g9Chg1Sg6RFhI\nfIIBqIGC/Gd+o38PnVP+TCTPBlWQLK3c9a+rAVJ8sQKBgQDghgDjgFzTbqGSKztj\n8DVa82IrEwS1wqbJmYCyUAEAnQMz3Wj2vJiuPz7ZDsNfIg8MeI243cba5dQCAbpv\n8rkCf4zm5nAkFD91hlcYdQ8US9jbEwC9iJM04ApAvdsfmDSaFxk0HkgjoJ8XTvCw\nwXxQqMrx0G6gXUCj7INQnn3m0wKBgQDQylE3HDnvZAwllGoo60mJcdtR4l8h+2n2\nE8PT/Z9rXMfTDHehMQGKnMnI5BFXNPd7Jl3OFjRquqKZPtRRQXQX8dB2qNzSgajY\nGRcIVcIHEG0p6CxGMnpePqnI8r5kr0nPUwwgf4AD3oXGO4gFrwz+ahCLc7a7WKhp\nxNmYCcYAIwKBgQDYdXi/3I4hrSQJ9rIQXJIj+EcpffFphpsj+2DPCECfJcDjrM84\nKYUNYJ4nx4rl2cEmZcdEdlPzz+XAdYgXy6tAVFY0ee+daQPxOy4WvyxlheYw9zYc\nhGJfdKuN1Tw/To9QC3rZ+2PTLVSTtSBpWHCQltrpnOg6pQzfvPKws8xvzwKBgQC0\nDdVuBjx8ErZa7huCwC2BhxuRCPvrbUoauT7GoVCKoM9+VKER9BYVOFLXmL7PitDl\nddetcv6vD9ZK+6DTlfOM9q9EtSkBrGk0OqbfPD2AJA1P93W+76cRgU6gCZ5ha7zm\nOwMZP3rhW1PX+Ny7shMtj8BG0npCJBnQZL8VW1BSKwKBgQCNLc2lZF+XqAjjJAR6\n3W9CLpjUtprCEqSczJSg4SEPJngBG1qr6RDohnwd+nNhH3n2rcUoMW1B9rlgPhPW\nTyF0kRWf996iuchaWp/qEAGqOCZ2+w9MoETYo+i6bjw1uYtEZLad+ajOO7n3X+uy\nQDZuDAVKttrAOv0d5BD3hChOPA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "transfer-codes@fgo-448323.iam.gserviceaccount.com",
+  "client_id": "117554026993381649225",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/transfer-codes%40fgo-448323.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+")
+if not credentials_json:
+    logging.error("GOOGLE_CREDENTIALS environment variable is missing.")
+    exit(1)
+
+# Parse the JSON credentials
 try:
-    credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES
+    credentials_info = json.loads(credentials_json)
+    credentials = service_account.Credentials.from_service_account_info(
+        credentials_info, scopes=SCOPES
     )
     service = build("docs", "v1", credentials=credentials)
 except Exception as e:
@@ -53,22 +72,22 @@ def create_embed(transfer_number, password, status):
     if status == "USED":
         # USED Embed
         embed = discord.Embed(
-            description="```diff\n- USED TRANSFER CODE\n```\n"
-                       "# DO NOT ATTEMPT TO RE-ENTER",
+            description=f"```diff\n- USED TRANSFER CODE\n```\n"
+                       f"# DO NOT ATTEMPT TO RE-ENTER",
             color=11804190,  # USED embed color
         )
     elif status == "UNUSED":
         # UNUSED Embed
         embed = discord.Embed(
-            description='```json\n"UNUSED TRANSFER CODE"\n```\n'
-                       "# DO NOT ATTEMPT TO RE-ENTER",
+            description=f'```json\n"UNUSED TRANSFER CODE"\n```\n'
+                       f"# DO NOT ATTEMPT TO RE-ENTER",
             color=2012298,  # UNUSED embed color
         )
     else:
         # Default Embed (fallback for invalid status)
         embed = discord.Embed(
             description="```diff\n- INVALID STATUS\n```\n"
-                       "# DO NOT ATTEMPT TO RE-ENTER",
+                       f"# DO NOT ATTEMPT TO RE-ENTER",
             color=0xFF0000,  # Red color for errors
         )
 
@@ -136,15 +155,22 @@ async def on_ready():
                         logging.warning("Embed is None. Skipping send.")
 
                     last_status = status
-                else:
-                    logging.warning("Invalid transfer number or password.")
             else:
-                logging.warning("Failed to read Google Docs document.")
+                logging.warning("Invalid transfer number or password.")
+        else:
+            logging.warning("Failed to read Google Docs document.")
 
         await asyncio.sleep(5)  # Check every 5 seconds
 
+# Read the Discord bot token from environment variable
+DISCORD_BOT_TOKEN = os.getenv("MTMzMDY4ODk3Njc5NjkxMzc3Ng.GVP0k9.K5IWuY0JoBacd_IxuY0vc2cY2LYBl5Xborlw3s
+")
+if not DISCORD_BOT_TOKEN:
+    logging.error("DISCORD_BOT_TOKEN environment variable is missing.")
+    exit(1)
+
 # Run the bot
 try:
-    client.run(os.getenv("DISCORD_BOT_TOKEN"))  # Read token from environment variable
+    client.run(DISCORD_BOT_TOKEN)
 except Exception as e:
     logging.error(f"Failed to start the bot: {e}")
