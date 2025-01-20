@@ -15,7 +15,7 @@ logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
 # Google Docs API setup
 SCOPES = ["https://www.googleapis.com/auth/documents.readonly"]
-DOCUMENT_ID = "1-DC0V8SPZ_Y5BM5x1tlwh4AnF9_6aQUNwme-0CVIrDU"  # Replace with your document ID
+DOCUMENT_ID = "1-DC0VS3Pz_Y5BW5xltLwh44nF0_6aQUNwme-0CVIrDU"  # Replace with your document ID
 
 # Read credentials from environment variable
 credentials_json = os.getenv("GOOGLE_CREDENTIALS")
