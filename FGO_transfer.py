@@ -36,7 +36,8 @@ except Exception as e:
 # Function to read Google Docs document
 def read_google_doc():
     try:
-        doc = service.documents().get(documentId=DOCUMENT_ID).execute()
+        doc = service.documents().get(documentId=1-DC0VS3Pz_Y5BW5xltLwh44nF0_6aQUNwme-0CVIrDU
+).execute()
         content = doc.get("body", {}).get("content", [])
         text = ""
 
